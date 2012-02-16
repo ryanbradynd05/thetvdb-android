@@ -57,6 +57,18 @@ public class TodayFragment extends ListFragment {
 		setHasOptionsMenu(true);
 		mTvdbDownloader = new TvdbDownloader(getActivity().getApplicationContext());
 		mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+		if (mTask != null) {
+			if (mTask.getStatus() == Status.FINISHED) {
+				//Data is already loaded. Show it
+				updateDisplay(mData, getActivity());
+			}
+			//Task still running
+			return;
+		}
+
+		//Start work in background
+		mTask = new TodayTask(getActivity(), false);
+		mTask.execute();
 	}
 	
 	@Override
@@ -67,19 +79,6 @@ public class TodayFragment extends ListFragment {
 	
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		if (mTask != null) {
-			if (mTask.getStatus() == Status.FINISHED) {
-				//Data is already loaded. Show it
-				updateDisplay(mData, getActivity());
-			}
-
-			//Task still running
-			return;
-		}
-
-		//Start work in background
-		mTask = new TodayTask(getActivity(), false);
-		mTask.execute();
 	}
 	
 	@Override
