@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+	package="com.srcology.android.thetvdb" 
+	android:versionCode="1" 
+	android:versionName="0.0.1">
+  
+	<uses-sdk 
+	    android:minSdkVersion="7" 
+	    android:targetSdkVersion="13" />
+    
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+	<application 
+	    android:icon="@drawable/ic_launcher" 
+	    android:label="@string/app_name" 
+        android:name="TvdbApp" 
+        android:debuggable="false">
+        
+		<activity 
+		    android:name=".activities.HomeActivity">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+	</application>
+</manifest>
+

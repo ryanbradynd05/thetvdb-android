@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item 
+        android:id="@+id/open_show" 
+        android:title="@string/menu_today_context_show"/>
+    <item 
+        android:id="@+id/open_season" 
+        android:title="@string/menu_today_context_season"/>
+    <item 
+        android:id="@+id/open_episode" 
+        android:title="@string/menu_today_context_episode"/>
+    <item 
+        android:id="@+id/add_favorite" 
+        android:title="@string/menu_today_context_add"/>
+</menu>
