@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <fragment android:name="com.thetvdb.brady.fragments.TodayFragment"
-            android:id="@+id/today_list"
+            android:id="@+id/fragment_today"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="match_parent" />
