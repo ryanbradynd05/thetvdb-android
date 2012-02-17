@@ -50,11 +50,9 @@ public class SearchFragment extends ListFragment {
         super.onAttach(activity);
         try {
         	loadListener = (SearchLoadListener) activity;
-//        	seriesListener = (OnSeriesSelectListener) activity;
-//        	episodeListener = (OnEpisodeSelectListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() +
-                " must implement OnTodayLoadListener");
+                " must implement OnSearchLoadListener");
         }
     }
 

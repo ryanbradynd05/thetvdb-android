@@ -13,7 +13,7 @@ public abstract class TvdbDAO {
 	private static final String TAG = TvdbApp.TAG;
 	
 	public synchronized void createTable(SQLiteDatabase database, String sql) {
-		Log.v(TAG,"createTable");
+		Log.v(TAG, "Create table");
 		try {
 			database.beginTransaction();
 			database.execSQL(sql);
@@ -24,7 +24,6 @@ public abstract class TvdbDAO {
 	}
 
 	public Cursor query(SQLiteDatabase database, String table, String[] columns, String selection ,String [] selectionArgs, String groupBy, String having, String orderBy) {
-//		Log.v(TAG,"query");
 		Cursor cursor = null;
 		try {
 			database.beginTransaction();
@@ -37,7 +36,6 @@ public abstract class TvdbDAO {
 	}
 	
 	public synchronized void delete(SQLiteDatabase database, String table, String whereClause, String[] whereArgs) {
-//		Log.v(TAG,"delete");
 		try {
 			database.beginTransaction();
 			database.delete(table, whereClause, whereArgs);
@@ -48,7 +46,6 @@ public abstract class TvdbDAO {
 	}
 	
 	public synchronized void insert(SQLiteDatabase database, String table, String nullColumnHack, ContentValues values) {
-		Log.v(TAG,"insert");
 		try {
 			database.beginTransaction();
 			database.insert(table, nullColumnHack, values);
@@ -59,7 +56,6 @@ public abstract class TvdbDAO {
 	}
 	
 	public synchronized void insertMultiple(SQLiteDatabase database, String table, String nullColumnHack, ArrayList<ContentValues> values) {
-		Log.v(TAG,"insert");
 		try {
 			database.beginTransaction();
 			for (ContentValues currentValues : values) {
@@ -72,7 +68,6 @@ public abstract class TvdbDAO {
 	}
 	
 	public synchronized void update(SQLiteDatabase database, String table, ContentValues values, String whereClause, String[] whereArgs) {
-		Log.v(TAG,"update");
 		try {
 			database.beginTransaction();
 			database.update(table, values, whereClause, whereArgs);

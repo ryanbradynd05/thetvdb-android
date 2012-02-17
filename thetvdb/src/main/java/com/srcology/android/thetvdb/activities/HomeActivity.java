@@ -15,6 +15,7 @@ import android.support.v4.view.MenuItem;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.Window;
 import android.util.Log;
+import android.view.MenuInflater;
 
 import com.srcology.android.thetvdb.R;
 import com.srcology.android.thetvdb.TvdbApp;
@@ -57,8 +58,8 @@ public class HomeActivity extends FragmentActivity implements TodayFragment.Toda
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-//		MenuInflater inflater = getMenuInflater();
-//		inflater.inflate(R.menu.home_menu, menu);
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.home_menu, menu);
 		return true;
 	}
 
@@ -70,22 +71,13 @@ public class HomeActivity extends FragmentActivity implements TodayFragment.Toda
             // App icon in action bar clicked; go home
             // Do nothing on home screen
             return false;
-//		case R.id.menu_search:
-//			onSearchRequested();
-//			return true;
-//		case R.id.menu_settings:
-//			showSettings();
-//			return true;
+		case R.id.menu_search:
+			onSearchRequested();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
-
-//	private void showSettings() {
-//		Log.d(TAG,"showSettings");
-//		startActivity(new Intent(this,
-//				SettingsActivity.class));
-//	}
     
     public static class TabsAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener, ActionBar.TabListener {
         private final Context mContext;
@@ -151,42 +143,4 @@ public class HomeActivity extends FragmentActivity implements TodayFragment.Toda
 		Log.d(TAG,"onTodayLoad: " + completed);
 		showProgress(completed);
 	}
-    
-//    private void openSeries(String seriesId) {
-//    	SeriesFragment series = (SeriesFragment) getSupportFragmentManager()
-//                .findFragmentById(R.id.series_fragment);
-//    	series.displaySeries(seriesId);
-//    }
-//    
-//    private void openEpisode(String episodeId) {
-////    	EpisodeFragment episode = (EpisodeFragment) getSupportFragmentManager()
-////                .findFragmentById(R.id.episode_fragment);
-//    }
-//
-//	@Override
-//	public void onFavoritesSelect(String seriesId) {
-//		Log.d(TAG,"onFavoritesSelect: " + seriesId);
-//		openSeries(seriesId);
-//		
-//	}
-//
-//	@Override
-//	public void onFavoritesLoad(boolean completed) {
-//		Log.d(TAG,"onFavoritesLoad: " + completed);
-//		showProgress(completed);
-//	}
-//
-//	@Override
-//	public void onEpisodeSelect(String episodeId) {
-//		Log.d(TAG,"onEpisodeSelect: " + episodeId);
-//		openEpisode(episodeId);
-//		
-//	}
-//
-//	@Override
-//	public void onSeriesSelect(String seriesId) {
-//		Log.d(TAG,"onSeriesSelect: " + seriesId);
-//		openSeries(seriesId);
-//		
-//	}
 }

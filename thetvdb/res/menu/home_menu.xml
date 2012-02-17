@@ -3,8 +3,4 @@
     <item android:id="@+id/menu_search"
 		android:icon="@android:drawable/ic_menu_search"
 		android:showAsAction="ifRoom"/>
-    <item android:id="@+id/menu_settings"
-		android:title="@string/menu_label_settings"
-		android:icon="@android:drawable/ic_menu_preferences"
-		android:showAsAction="never" />
 </menu>

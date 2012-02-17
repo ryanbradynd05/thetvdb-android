@@ -46,8 +46,6 @@ public class TodayFragment extends ListFragment {
 	private TodayTask mTask;
 	private Cursor mData;
 	private TodayLoadListener loadListener;
-//	private OnSeriesSelectListener seriesListener;
-//	private OnEpisodeSelectListener episodeListener;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -86,8 +84,6 @@ public class TodayFragment extends ListFragment {
         super.onAttach(activity);
         try {
         	loadListener = (TodayLoadListener) activity;
-//        	seriesListener = (OnSeriesSelectListener) activity;
-//        	episodeListener = (OnEpisodeSelectListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() +
                 " must implement OnTodayLoadListener");
@@ -115,36 +111,9 @@ public class TodayFragment extends ListFragment {
 		}
 	}
 	
-//	@Override
-//	public void onListItemClick(ListView l, View v, int position, long id) {
-//		try {
-//			super.onListItemClick(l, v, position, id);
-//			Cursor cursor = (Cursor) l.getItemAtPosition(position);
-//			if (cursor.getCount() > 0) {
-//				cursor.moveToPosition(position);
-//				int showIdIndex = cursor.getColumnIndex("showId");
-//				Item item = new Item();
-//				String showId = cursor.getString(showIdIndex);
-//				item.showId = showId;
-//				String strTextToDisplay = "Selected item is : " + showId;
-//				Toast.makeText(getActivity(), strTextToDisplay, Toast.LENGTH_LONG).show();
-//			}
-//		} catch(Exception ex) {
-//			Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
-//		}
-//	}
-	
 	public interface TodayLoadListener {
         public void onTodayLoad(boolean completed);
     }
-	
-//	public interface OnSeriesSelectListener {
-//        public void onSeriesSelect(String seriesId);
-//    }
-//	
-//	public interface OnEpisodeSelectListener {
-//        public void onEpisodeSelect(String episodeId);
-//    }
 	
 	private class TodayTask extends AsyncTask<String, Void, Void> {
 		private Cursor smData;
@@ -265,5 +234,4 @@ public class TodayFragment extends ListFragment {
 			e.printStackTrace();
 		}
 	}
-
 }
