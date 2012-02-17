@@ -12,7 +12,7 @@ import com.srcology.android.thetvdb.TvdbApp;
 import com.srcology.android.thetvdb.fragments.SearchFragment;
 import com.srcology.android.thetvdb.util.SearchSuggestionProvider;
 
-public class SearchActivity extends FragmentActivity {
+public class SearchActivity extends FragmentActivity  implements SearchFragment.SearchLoadListener {
 	private static final String TAG = TvdbApp.TAG;
 
 	@Override
@@ -33,5 +33,18 @@ public class SearchActivity extends FragmentActivity {
 					(SearchFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_search);
 			searchFragment.search(query);
 		}
+	}
+    
+    private void showProgress(boolean completed) {
+		if (completed) {
+			setProgressBarIndeterminateVisibility(Boolean.FALSE);
+		} else {
+			setProgressBarIndeterminateVisibility(Boolean.TRUE);
+		}
+    }
+
+	public void onSearchLoad(boolean completed) {
+		Log.d(TAG,"onSearchLoad: " + completed);
+		showProgress(completed);
 	}
 }

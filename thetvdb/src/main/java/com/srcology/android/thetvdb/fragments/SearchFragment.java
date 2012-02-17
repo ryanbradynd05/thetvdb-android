@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v4.app.SupportActivity;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
 import android.util.Log;
@@ -34,7 +35,8 @@ import com.srcology.android.thetvdb.util.TvdbDownloader;
 public class SearchFragment extends ListFragment {
 	private static final String TAG = TvdbApp.TAG;
 	private TvdbDownloader mTvdbDownloader;
-
+	private SearchLoadListener loadListener;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG, "Start onCreate in TvdbSearchActivity");
@@ -43,6 +45,19 @@ public class SearchFragment extends ListFragment {
 		setHasOptionsMenu(true);
 		mTvdbDownloader = new TvdbDownloader(getActivity().getApplicationContext());
 	}
+	
+	@Override
+    public void onAttach(SupportActivity activity) {
+        super.onAttach(activity);
+        try {
+        	loadListener = (SearchLoadListener) activity;
+//        	seriesListener = (OnSeriesSelectListener) activity;
+//        	episodeListener = (OnEpisodeSelectListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() +
+                " must implement OnTodayLoadListener");
+        }
+    }
 
 	public void search(String query) {
 		new SearchTask(getActivity(), query).execute();
@@ -76,9 +91,12 @@ public class SearchFragment extends ListFragment {
 			return super.onOptionsItemSelected(item);
 		}
 	}
+	
+	public interface SearchLoadListener {
+        public void onSearchLoad(boolean completed);
+    }
 
 	private class SearchTask extends AsyncTask<String, Void, Void> {
-		private final ProgressDialog smDialog;
 		private ArrayList<Series> smSeriesList;
 		private Activity smActivity;
 		private String smQuery;
@@ -87,12 +105,10 @@ public class SearchFragment extends ListFragment {
 			super();
 			smActivity = activity;
 			smQuery = query;
-			smDialog = new ProgressDialog(smActivity);
 		}
 
 		protected void onPreExecute() {
-			smDialog.setMessage(getString(R.string.loading_text));
-			smDialog.show();
+			loadListener.onSearchLoad(false);
 		}
 
 		protected Void doInBackground(final String... args) {
@@ -106,9 +122,7 @@ public class SearchFragment extends ListFragment {
 						android.R.layout.simple_list_item_1, smSeriesList);
 				setListAdapter(adapter);
 				registerForContextMenu(getListView());
-				if (smDialog.isShowing()) {
-					smDialog.dismiss();
-				}
+				loadListener.onSearchLoad(true);
 			}
 		}
 	}
