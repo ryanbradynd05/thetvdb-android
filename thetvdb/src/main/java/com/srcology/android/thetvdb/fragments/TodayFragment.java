@@ -182,13 +182,15 @@ public class TodayFragment extends ListFragment {
 	}
 	
 	private void updateDisplay(Cursor data, Activity activity) {
-		SimpleCursorAdapter adapter = new SimpleCursorAdapter(activity, 
-				android.R.layout.simple_list_item_2,
-				data,
-				new String[] {"showName", "episodeName"},
-				new int[] {android.R.id.text1, android.R.id.text2},
-				CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-		setListAdapter(adapter);
+		if (activity != null) {
+			SimpleCursorAdapter adapter = new SimpleCursorAdapter(activity, 
+					android.R.layout.simple_list_item_2,
+					data,
+					new String[] {"showName", "episodeName"},
+					new int[] {android.R.id.text1, android.R.id.text2},
+					CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+			setListAdapter(adapter);
+		}
 	}
 	
 	private String getCurrentDate() {

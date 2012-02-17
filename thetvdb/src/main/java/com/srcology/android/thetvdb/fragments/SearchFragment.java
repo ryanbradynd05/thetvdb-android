@@ -101,12 +101,14 @@ public class SearchFragment extends ListFragment {
 		}
 
 		protected void onPostExecute(final Void unused) {
-			SearchAdapter adapter = new SearchAdapter(smActivity.getApplicationContext(), 
-					android.R.layout.simple_list_item_1, smSeriesList);
-			setListAdapter(adapter);
-			registerForContextMenu(getListView());
-			if (smDialog.isShowing()) {
-				smDialog.dismiss();
+			if (smActivity != null) {
+				SearchAdapter adapter = new SearchAdapter(smActivity.getApplicationContext(), 
+						android.R.layout.simple_list_item_1, smSeriesList);
+				setListAdapter(adapter);
+				registerForContextMenu(getListView());
+				if (smDialog.isShowing()) {
+					smDialog.dismiss();
+				}
 			}
 		}
 	}
