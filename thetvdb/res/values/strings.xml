@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">TheTVDB</string>
+    <string name="service_name">TheTVDBService</string>
     <string name="api_key">3944261E19EE136D</string>
     
     <!-- URLs -->

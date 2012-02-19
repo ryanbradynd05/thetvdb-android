@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.Window;
 import android.util.Log;
 
 import com.srcology.android.thetvdb.R;
 import com.srcology.android.thetvdb.TvdbApp;
 import com.srcology.android.thetvdb.fragments.SearchFragment;
+import com.srcology.android.thetvdb.service.TvdbService;
 import com.srcology.android.thetvdb.util.SearchSuggestionProvider;
 
 public class SearchActivity extends FragmentActivity  implements SearchFragment.SearchLoadListener {
@@ -20,8 +22,10 @@ public class SearchActivity extends FragmentActivity  implements SearchFragment.
 		Log.d(TAG, "Start onCreate in SearchActivity");
 		super.onCreate(savedInstanceState);
         TvdbApp.applySharedTheme(this.getApplicationContext(), this);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.search);
 
+        startService(new Intent(TvdbService.class.getName()));
 		// Get the intent, verify the action and get the query
 		Intent intent = getIntent();
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
