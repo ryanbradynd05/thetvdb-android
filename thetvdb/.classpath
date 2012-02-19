@@ -10,7 +10,8 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" output="bin/classes" path="src/main/java"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/viewpagerindicator"/>
+	<classpathentry kind="src" path="aidl"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/actionbarsherlock"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/viewpagerindicator"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

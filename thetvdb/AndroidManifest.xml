@@ -18,10 +18,16 @@
         android:name="TvdbApp" 
         android:debuggable="false">
         
-		<meta-data android:name="android.app.default_searchable"
+		<meta-data 
+		    android:value="a14f4049183e147" 
+		    android:name="ADMOB_PUBLISHER_ID" />
+        
+		<meta-data 
+		    android:name="android.app.default_searchable"
 			android:value=".activities.SearchActivity" />
 		
-		<provider android:name="com.srcology.android.thetvdb.util.SearchSuggestionProvider"
+		<provider 
+		    android:name="com.srcology.android.thetvdb.util.SearchSuggestionProvider"
               android:authorities="com.srcology.android.thetvdb.util.SearchSuggestionProvider" />
         
 		<activity 
@@ -36,9 +42,12 @@
 			<intent-filter>
 				<action android:name="android.intent.action.SEARCH" />
 			</intent-filter>
-			<meta-data android:name="android.app.searchable"
+			<meta-data 
+			    android:name="android.app.searchable"
 				android:resource="@xml/searchable" />
 		</activity>
+		<activity android:name="com.google.ads.AdActivity"
+              android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
 	</application>
 </manifest>
 
