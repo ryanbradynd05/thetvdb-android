@@ -16,5 +16,6 @@
         ads:adUnitId="a14f4049183e147"
         ads:adSize="BANNER"
         ads:testDevices="TEST_EMULATOR"
-        ads:loadAdOnCreate="true"/>
+        ads:loadAdOnCreate="true"
+        ads:refreshInterval="10" />
 </LinearLayout>
