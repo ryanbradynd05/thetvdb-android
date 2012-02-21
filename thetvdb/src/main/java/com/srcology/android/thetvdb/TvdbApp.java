@@ -14,10 +14,11 @@ import com.srcology.android.thetvdb.dao.LanguageDAO;
 import com.srcology.android.thetvdb.dao.SeasonDAO;
 import com.srcology.android.thetvdb.dao.SeriesDAO;
 import com.srcology.android.thetvdb.dao.TodayDAO;
+import com.srcology.android.thetvdb.service.TvdbService;
 import com.srcology.android.thetvdb.util.TvdbDownloader;
 
 public class TvdbApp extends Application {
-	public static final String TAG = "TvdbApp";
+	public static String TAG;
 	public static LanguageDAO languageDAO;
 	public static TodayDAO todayDAO;
 	public static FavoriteDAO favoriteDAO;
@@ -30,13 +31,15 @@ public class TvdbApp extends Application {
 		Log.d(TAG,"Start oncreate in TvdbApp");
 	    super.onCreate();
 	    Context context = getApplicationContext();
-		
+		TAG = context.getString(R.string.app_name);
 		languageDAO = new LanguageDAO(context);
 		todayDAO = new TodayDAO(context);
 		favoriteDAO = new FavoriteDAO(context);
 		seriesDAO = new SeriesDAO(context);
 		seasonDAO = new SeasonDAO(context);
 		episodeDAO = new EpisodeDAO(context);
+		
+		TvdbService.scheduleRepeatingTask(context, TvdbService.ACTION_ALL);
 		
 		TvdbDownloader tvdbDownloader = new TvdbDownloader(context);
 		if (tvdbDownloader.isExternalStorageWriteable()) {

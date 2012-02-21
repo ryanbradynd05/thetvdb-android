@@ -34,7 +34,8 @@ public class HomeActivity extends FragmentActivity implements TodayFragment.Toda
         TvdbApp.applySharedTheme(this.getApplicationContext(), this);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.home);
-        setProgressBarIndeterminateVisibility(Boolean.FALSE);
+        
+//        startService(new Intent(TvdbService.class.getName()));
         getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
 //        ActionBar.Tab favTab = getSupportActionBar().newTab().setText(getString(R.string.favorites));

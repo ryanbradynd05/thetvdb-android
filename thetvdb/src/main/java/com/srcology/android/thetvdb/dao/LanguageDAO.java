@@ -1,6 +1,11 @@
 package com.srcology.android.thetvdb.dao;
 
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.ArrayList;
+
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Persister;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -11,15 +16,19 @@ import android.util.Log;
 import com.srcology.android.thetvdb.R;
 import com.srcology.android.thetvdb.TvdbApp;
 import com.srcology.android.thetvdb.model.xml.language.Language;
+import com.srcology.android.thetvdb.model.xml.language.Languages;
+import com.srcology.android.thetvdb.util.TvdbDownloader;
 
 public class LanguageDAO extends TvdbDAO {
 	private static final String TAG = TvdbApp.TAG;
 	private Context mContext;
 	public static SQLiteDatabase mDatabase;
-	private String mLanguageTable;	
+	private String mLanguageTable;
+	private TvdbDownloader mTvdbDownloader;
 
 	public LanguageDAO(Context context) {
 		mContext = context;
+		mTvdbDownloader = new TvdbDownloader(mContext);
 		String dbName = mContext.getString(R.string.db_name);
 		mLanguageTable = mContext.getString(R.string.language_table);
 		Log.d(TAG, new StringBuilder("Open or create database: ")
@@ -94,11 +103,16 @@ public class LanguageDAO extends TvdbDAO {
 		return languages.get(0);
 	}
 
-	public ArrayList<Language> findAll() {
+	public Cursor findAll() {
 		Cursor cursor = query(mDatabase, 
 				mLanguageTable, 
 				new String[]{"_id","tvdbId","name","abbreviation"}, 
 				null, null, null, null, null);
+		return cursor;
+	}
+
+	public ArrayList<Language> findAllLanguages() {
+		Cursor cursor = findAll();
 		return convertCursorToLanguage(cursor);
 	}
 	
@@ -116,5 +130,39 @@ public class LanguageDAO extends TvdbDAO {
 			} while (!cursor.isAfterLast());
 		}
 		return languages;
+	}
+	
+	public void loadLanguages() {
+    	Log.d(TAG, "Start loadLanguages in SettingsActivity");
+    	Cursor existingLangs = findAll();
+    	if (existingLangs.getCount()==0) {
+    		getLanguages();
+    	} else {
+        	Log.d(TAG, "Languages previously loaded.");
+    	}
+	}
+	
+	private void getLanguages() {
+    	Log.d(TAG, "Start getLanguages in SettingsActivity");
+		
+		String uri = new StringBuilder(mContext.getString(R.string.api_path))
+			.append(mContext.getString(R.string.api_key))
+			.append("/languages.xml")
+			.toString();
+		String languageXml = mTvdbDownloader.getXmlString(uri);
+
+    	Log.d(TAG, "Serialize languages.xml");
+		Serializer serializer = new Persister();       
+		Reader reader = new StringReader(languageXml);
+		Languages languagesClass;
+		try {
+			languagesClass = serializer.read(Languages.class, reader, false);
+			ArrayList<Language> languageList = languagesClass.languages;
+			for (Language language: languageList) {
+				insert(language);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

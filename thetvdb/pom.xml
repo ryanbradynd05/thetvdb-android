@@ -21,6 +21,7 @@
 			<version>3.2_r1</version>
 			<scope>provided</scope>
 		</dependency>
+		<!-- Simple XML -->
 		<dependency>
 			<groupId>org.simpleframework</groupId>
 			<artifactId>simple-xml</artifactId>
@@ -42,32 +43,44 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<!-- Google Guava -->
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>11.0.1</version>
 		</dependency>
+		<!-- ActionBar Sherlock -->
 		<dependency>
 			<groupId>com.actionbarsherlock</groupId>
 			<artifactId>library</artifactId>
 			<version>3.5.1</version>
 			<type>apklib</type>
 		</dependency>
+		<!-- ActionBar Sherlock Prefs -->
 		<dependency>
 			<groupId>com.actionbarsherlock</groupId>
 			<artifactId>plugin-preference</artifactId>
 			<version>3.5.1</version>
 		</dependency>
+		<!-- ViewPager Indicator -->
 		<dependency>
 			<groupId>com.viewpagerindicator</groupId>
 			<artifactId>library</artifactId>
 			<version>2.2.3</version>
 			<type>apklib</type>
 		</dependency>
+		<!-- Local Dependencies -->
+		<!-- Admob -->
 		<dependency> 
 			<groupId>com.google.ads</groupId> 
 			<artifactId>GoogleAdMobAdsSdk</artifactId> 
 			<version>4.3.1</version> 
+		</dependency>
+		<!-- Commonsware WakefulIntentService -->
+		<dependency> 
+			<groupId>com.commonsware.cwac</groupId> 
+			<artifactId>wakeful</artifactId> 
+			<version>0.6.1</version> 
 		</dependency>
 	</dependencies>
 	<repositories>
@@ -117,9 +130,6 @@
 						<sdk>
 							<platform>13</platform>
 						</sdk>
-						<emulator>
-							<avd>${emulator.name}</avd>
-						</emulator>
 						<deleteConflictingFiles>true</deleteConflictingFiles>
 						<undeployBeforeDeploy>false</undeployBeforeDeploy>
 					</configuration>

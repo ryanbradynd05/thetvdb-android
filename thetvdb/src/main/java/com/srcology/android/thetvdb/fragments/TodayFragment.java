@@ -1,24 +1,14 @@
 package com.srcology.android.thetvdb.fragments;
 
-import java.io.Reader;
-import java.io.StringReader;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.TimeZone;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.core.Persister;
-
 import android.app.Activity;
-import android.content.SharedPreferences;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.SupportActivity;
 import android.support.v4.view.Menu;
@@ -34,27 +24,27 @@ import android.widget.ArrayAdapter;
 
 import com.srcology.android.thetvdb.R;
 import com.srcology.android.thetvdb.TvdbApp;
-import com.srcology.android.thetvdb.model.xml.newtoday.Channel;
-import com.srcology.android.thetvdb.model.xml.newtoday.Item;
-import com.srcology.android.thetvdb.model.xml.newtoday.Rss;
-import com.srcology.android.thetvdb.util.TvdbDownloader;
+import com.srcology.android.thetvdb.service.TvdbService;
 
 public class TodayFragment extends ListFragment {
 	private static final String TAG = TvdbApp.TAG;
-	private TvdbDownloader mTvdbDownloader;
-	private SharedPreferences mSharedPrefs;
 	private TodayTask mTask;
 	private Cursor mData;
 	private TodayLoadListener loadListener;
+	private TodayReceiver receiver;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG, "Start onCreate in TodayFragment");
 		super.onCreate(savedInstanceState);
-		setRetainInstance(true);
+//		setRetainInstance(true);
 		setHasOptionsMenu(true);
-		mTvdbDownloader = new TvdbDownloader(getActivity().getApplicationContext());
-		mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+		
+        IntentFilter filter = new IntentFilter(TvdbService.ACTION_BROADCAST);
+        filter.addCategory(Intent.CATEGORY_DEFAULT);
+        receiver = new TodayReceiver();
+        getActivity().registerReceiver(receiver, filter);
+		
 		if (mTask != null) {
 			if (mTask.getStatus() == Status.FINISHED) {
 				//Data is already loaded. Show it
@@ -65,7 +55,7 @@ public class TodayFragment extends ListFragment {
 		}
 
 		//Start work in background
-		mTask = new TodayTask(getActivity(), false);
+		mTask = new TodayTask(getActivity());
 		mTask.execute();
 	}
 	
@@ -73,6 +63,12 @@ public class TodayFragment extends ListFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.fragment_today, container, false);
+	}
+	
+	@Override
+	public void onDestroy() {
+		getActivity().unregisterReceiver(receiver);
+		super.onDestroy();
 	}
 	
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -104,7 +100,7 @@ public class TodayFragment extends ListFragment {
 					android.R.layout.simple_list_item_1,
 					new String[]{});
 			setListAdapter(adapter);
-			new TodayTask(getActivity(), true).execute();
+			new RefreshTask(getActivity()).execute();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -115,15 +111,28 @@ public class TodayFragment extends ListFragment {
         public void onTodayLoad(boolean completed);
     }
 	
+	public class TodayReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String broadcastString = intent.getStringExtra(TvdbService.BROADCAST_STRING);
+			Log.d(TAG,"BroadcastString: " + broadcastString);
+			if (broadcastString.equalsIgnoreCase(TvdbService.TODAY_COMPLETE)) {
+				Log.d(TAG,"Launch TodayTask");
+				new TodayTask(getActivity()).execute();
+			} else {
+				Log.d(TAG,"Unknown BroadcastString");
+			}
+		}		
+	}
+	
 	private class TodayTask extends AsyncTask<String, Void, Void> {
 		private Cursor smData;
 		private Activity smActivity;
-		private boolean smForceUpdate;
 		
-		public TodayTask(Activity activity, boolean forceUpdate) {
+		public TodayTask(Activity activity) {
 	        super();
 	        smActivity = activity;
-	        smForceUpdate = forceUpdate;
 	    }
 
 		protected void onPreExecute() {
@@ -131,15 +140,7 @@ public class TodayFragment extends ListFragment {
 		}
 
 		protected Void doInBackground(final String... args) {
-			if (smForceUpdate) {
-				smData = loadEpisodesFromTvdb();
-			} else {
-				if (!updatedToday()) {
-					smData = loadEpisodesFromTvdb();
-				} else {
-					smData = loadEpisodesFromDatabase();
-				}
-			}
+			smData = loadEpisodesFromDatabase();
 			return null;
 		}
 
@@ -148,6 +149,26 @@ public class TodayFragment extends ListFragment {
 			registerForContextMenu(getListView());
 			loadListener.onTodayLoad(true);
 		}
+	}
+	
+	private class RefreshTask extends AsyncTask<String, Void, Void> {
+		private Activity smActivity;
+		
+		public RefreshTask(Activity activity) {
+	        super();
+	        smActivity = activity;
+	    }
+
+		protected void onPreExecute() {
+			loadListener.onTodayLoad(false);
+		}
+
+		protected Void doInBackground(final String... args) {
+			TvdbService.scheduleTask(smActivity.getApplicationContext(), TvdbService.ACTION_TODAY);
+			return null;
+		}
+
+		protected void onPostExecute(final Void unused) {}
 	}
 	
 	private void updateDisplay(Cursor data, Activity activity) {
@@ -162,76 +183,9 @@ public class TodayFragment extends ListFragment {
 		}
 	}
 	
-	private String getCurrentDate() {
-		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
-		sdf.setTimeZone(TimeZone.getTimeZone("GMT-12"));
-		return sdf.format(new Date());		
-	}
-	
-	private boolean updatedToday() {
-		String todayAccessDate = mSharedPrefs.getString(getString(R.string.pref_access_today), "");
-		String currentDate = getCurrentDate();
-		Log.d(TAG,"currentDate: " + currentDate);
-		if (todayAccessDate.equalsIgnoreCase(currentDate)) {
-			Log.d(TAG,"already updated today");
-			return true;
-		} else {
-			Log.d(TAG,"not yet updated today");
-			return false;
-		}
-	}
-	
 	private Cursor loadEpisodesFromDatabase() {
 		Log.d(TAG,"loadEpisodesFromDatabase");
 		Cursor data = TvdbApp.todayDAO.findAll();
 		return data;
-	}
-	
-	private Cursor loadEpisodesFromTvdb() {
-		Log.d(TAG,"loadEpisodesFromTvdb");
-		String nowPlayingUrl = new StringBuilder(getString(R.string.mirror_path))
-			.append("rss/newtoday.php")
-			.toString();
-		String nowPlaying = mTvdbDownloader.getXmlString(nowPlayingUrl);  
-		Reader reader = new StringReader(nowPlaying);
-		addEpisodesToDatabase(reader);
-		Cursor data = loadEpisodesFromDatabase();
-		return data;
-	}
-	
-	private void addEpisodesToDatabase(Reader reader) {
-		Log.d(TAG, "addEpisodesToDatabase");
-		TvdbApp.todayDAO.deleteAll();
-		Serializer serializer = new Persister();
-		try {
-			Rss rss = serializer.read(Rss.class, reader, false);
-			Channel channel = rss.channel;
-			ArrayList<Item> items = channel.items;
-			for (Item item : items) {
-				String title = item.title;
-				int lastColon = title.lastIndexOf(":");
-				String showName = title.substring(0, lastColon);
-				String episodeName = title.substring(lastColon + 2);
-				item.showName = showName;
-				item.episodeName = episodeName;
-				
-				String link = item.link;
-				String patternStr = "seriesid=(\\d+).+seasonid=(\\d+).+id=(\\d+)";
-				Pattern pattern = Pattern.compile(patternStr);
-				Matcher matcher = pattern.matcher(link);
-				boolean matchFound = matcher.find();
-				if (matchFound) {
-					item.showId = matcher.group(1);
-					item.seasonId = matcher.group(2);
-					item.episodeId = matcher.group(3);
-				}
-				TvdbApp.todayDAO.insert(item);
-			}
-			SharedPreferences.Editor editor = mSharedPrefs.edit();
-			editor.putString(getString(R.string.pref_access_today), getCurrentDate());
-			editor.commit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 }
