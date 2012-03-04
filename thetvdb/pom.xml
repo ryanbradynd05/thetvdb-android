@@ -179,6 +179,28 @@
 				<artifactId>android-maven-plugin</artifactId>
 				<extensions>true</extensions>
 			</plugin>
+			<plugin>
+				<groupId>com.mycila.maven-license-plugin</groupId>
+				<artifactId>maven-license-plugin</artifactId>
+				<version>1.9.0</version>
+				<configuration>
+					<header>NOTICE</header>
+					<strictCheck>true</strictCheck>
+					<includes>
+						<include>AndroidManifest.xml</include>
+						<include>assets/**</include>
+						<include>res/**</include>
+						<include>src/**</include>
+					</includes>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 	<profiles>
