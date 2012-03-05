@@ -20,6 +20,7 @@ package com.srcology.android.thetvdb.activities;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActionBar;
 import android.support.v4.app.ActionBar.Tab;
@@ -92,9 +93,18 @@ public class HomeActivity extends FragmentActivity implements TodayFragment.Toda
 		case R.id.menu_search:
 			onSearchRequested();
 			return true;
+		case R.id.menu_settings:
+			showSettings();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	private void showSettings() {
+		Log.d(TAG,"showSettings");
+		startActivity(new Intent(this,
+				SettingsActivity.class));
 	}
     
     public static class TabsAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener, ActionBar.TabListener {

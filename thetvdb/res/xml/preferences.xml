@@ -23,4 +23,15 @@
         android:key="@string/pref_account_id" 
         android:title="@string/pref_label_account_id" 
         android:persistent="true" />
+    <PreferenceCategory 
+        android:title="@string/pref_cat_updates" 
+        android:key="updateCategory">
+		<ListPreference
+			android:title="@string/pref_update_freq_display"
+			android:key="@string/pref_update_freq"
+			android:persistent="true" 
+			android:entryValues="@array/update_freq" 
+			android:entries="@array/update_freq" 
+			android:defaultValue="@string/pref_update_daily" />
+	</PreferenceCategory>
 </PreferenceScreen>

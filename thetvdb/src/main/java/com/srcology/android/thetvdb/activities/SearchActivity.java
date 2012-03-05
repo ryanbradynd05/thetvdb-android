@@ -31,7 +31,7 @@ import com.srcology.android.thetvdb.fragments.SearchFragment;
 import com.srcology.android.thetvdb.service.TvdbService;
 import com.srcology.android.thetvdb.util.SearchSuggestionProvider;
 
-public class SearchActivity extends FragmentActivity  implements SearchFragment.SearchLoadListener {
+public class SearchActivity extends FragmentActivity implements SearchFragment.SearchLoadListener {
 	private static final String TAG = TvdbApp.TAG;
 
 	@Override

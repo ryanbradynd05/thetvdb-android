@@ -19,4 +19,9 @@
 
 -->
 <resources>
+    <string-array name="update_freq">
+        <item>@string/pref_update_daily</item>
+        <item>@string/pref_update_weekly</item>
+        <item>@string/pref_update_monthly</item>
+    </string-array>
 </resources>

@@ -58,6 +58,12 @@
     <string name="pref_label_account_id">Account Identifier</string>
     <string name="pref_account_id">accountId</string>
     <string name="pref_access_today">accessToday</string>
+    <string name="pref_cat_updates">Updates</string>
+    <string name="pref_update_freq_display">Update Frequency</string>
+    <string name="pref_update_freq">updateFrequency</string>
+    <string name="pref_update_daily">Daily</string>
+    <string name="pref_update_weekly">Weekly</string>
+    <string name="pref_update_monthly">Monthly</string>
     
     <!-- Series Fragment Labels -->
     <string name="series_first_aired">First Aired: </string>
